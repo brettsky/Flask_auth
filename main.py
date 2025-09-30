@@ -19,7 +19,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.instance
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
-app.config['SESSION_COOKIE_SECURE'] = os.environ.get('FLASK_ENV') == 'production'
+
 
 # CSRF protection for all modifying requests
 app.config['WTF_CSRF_ENABLED'] = True
@@ -97,8 +97,8 @@ def login():
     if _is_rate_limited(client_ip):
         return render_template('index.html', error="Too many login attempts. Try again later."), 429
 
-    username = (request.form.get('username') or '').strip() #get the username from the form
-    password = request.form.get('password') or '' #get the password from the form
+    username = request.form.get('username') #get the username from the form
+    password = request.form.get('password') #get the password from the form
     existing_user = User.query.filter_by(username=username).first()
     if existing_user and existing_user.check_password(password): #check if the password is correct
         session.clear()
