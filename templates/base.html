@@ -6,15 +6,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-        <title>Flask Authentication</title>
+		<title>Flask Authentication</title>
+		<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"> <!-- modern SaaS styles -->
     </head>
     <body>
 
-   <header>Bretts Flask Authentication Training</header>
+	   <!-- Minimal header with top-right login button that anchors to the form -->
+	   <header class="site-header">
+	   		<div class="header-inner">
+	   			<div class="brand">Bretts Flask Authentication Training</div>
+	   			<a href="" class="btn btn-header-login">ToDo</a>
+	   		</div>
+	   </header>
 
 
    
-   {% block body %}
+	   {% block body %}
     <p>This is the base template</p>
 
    {% endblock %}
