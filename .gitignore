@@ -1,0 +1,12 @@
+# SQLite and local DBs
+# SQLite and local DBs
+*.db
+
+
+*.sqlite
+*.sqlite-journal
+*.sqlite3
+
+instance/*.DBs
+
+.env
