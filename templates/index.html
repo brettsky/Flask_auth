@@ -26,17 +26,17 @@
 
 <script>
     function setActionForm(action) {
-        let formEl = document.getElementById('auth-form');
+        let authForm = document.getElementById('auth-form');
         if (action === 'login') {
             // Point to auth blueprint login endpoint
-            formEl.action = '{{ url_for("auth.login") }}';
-            formEl.method = 'POST';
-            formEl.submit();
+            authForm.action = '{{ url_for("auth.login") }}';
+            authForm.method = 'POST';
+            authForm.submit();
         } else if (action === 'register') {
             // Point to auth blueprint register endpoint
-            formEl.action = '{{ url_for("auth.register") }}';
-            formEl.method = 'POST';
-            formEl.submit();
+            authForm.action = '{{ url_for("auth.register") }}';
+            authForm.method = 'POST';
+            authForm.submit();
         }
     }
 
