@@ -10,7 +10,8 @@
         {% if error %}
         <div class="alert text-center">{{ error }}</div>
         {% endif %}
-        <form id="auth-form" action="{{ url_for('login') }}" method="post">
+        <!-- Action now points to auth blueprint endpoint -->
+        <form id="auth-form" action="{{ url_for('auth.login') }}" method="post">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
             <input type="text" name="username"  class="input-field" placeholder="Username">
@@ -27,11 +28,13 @@
     function setActionForm(action) {
         let formEl = document.getElementById('auth-form');
         if (action === 'login') {
-            formEl.action = '{{ url_for("login") }}';
+            // Point to auth blueprint login endpoint
+            formEl.action = '{{ url_for("auth.login") }}';
             formEl.method = 'POST';
             formEl.submit();
         } else if (action === 'register') {
-            formEl.action = '{{ url_for("register") }}';
+            // Point to auth blueprint register endpoint
+            formEl.action = '{{ url_for("auth.register") }}';
             formEl.method = 'POST';
             formEl.submit();
         }
