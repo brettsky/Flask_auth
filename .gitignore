@@ -10,3 +10,5 @@
 instance/*.DBs
 
 .env
+.venv/
+venv/
