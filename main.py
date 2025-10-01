@@ -4,7 +4,7 @@ import os
 
 # Create the Flask app using the factory and keep the same startup behavior
 app = create_app()
-
+#checkin if advanced security in github is working
 if __name__ == '__main__':
 	# Create DB before running the server (preserves previous behavior)
 	with app.app_context():
