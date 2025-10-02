@@ -25,7 +25,7 @@ def create_app(config_object: str | None = None) -> Flask:
     # Load environment variables from a local .env if present (no effect in prod)
     load_dotenv()
     # Core configuration
-    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or secrets.token_hex(32)
+    app.config['SECRET_KEY'] =  secrets.token_hex(32)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.instance_path, 'users.db')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 

@@ -91,15 +91,24 @@ def google_authorize():
     token = oauth.google.authorize_access_token()
     userinfo_endpoint = oauth.google.load_server_metadata()['userinfo_endpoint']
     resp = oauth.google.get(userinfo_endpoint)
+# inside google_authorize() after fetching userinfo
     userinfo = resp.json()
-    username = userinfo['email']
+    if not userinfo.get('email_verified', False):
+        return render_template('index.html', error="Google account email not verified"), 403
 
-    user = User.query.filter_by(username=username).first()
+    google_sub = userinfo.get('sub')
+    email = userinfo.get('email')
+    
+    # Lookup by sub first; fallback by email once, then bind sub
+    user = User.query.filter_by(google_sub=google_sub).first()
     if not user:
-        user = User(username=username)
-        db.session.add(user)
+        user = User.query.filter_by(username=email).first()
+        if user and not user.google_sub:
+            user.google_sub = google_sub
+        elif not user:
+            user = User(username=email, google_sub=google_sub, is_oauth_only=True)
+            db.session.add(user)
         db.session.commit()
-    session['username'] = username
-    session['oauth_token'] = token
 
+    session['username'] = user.username
     return redirect(url_for('main.dashboard'))
