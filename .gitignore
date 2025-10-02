@@ -2,6 +2,9 @@
 # SQLite and local DBs
 *.db
 
+# Secrets and instance data
+
+instance/
 
 *.sqlite
 *.sqlite-journal
@@ -12,3 +15,16 @@ instance/*.DBs
 .env
 .venv/
 venv/
+
+*.pyc
+/app/__pycache__/
+/app/auth/__pycache__/
+/app/main/__pycache__/
+/app/extensions/__pycache__/
+/app/models/__pycache__/
+/app/routes/__pycache__/
+/app/utils/__pycache__/
+/app/forms/__pycache__/
+/app/templates/__pycache__/
+/app/static/__pycache__/
+__pycache__/
