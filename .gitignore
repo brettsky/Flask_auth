@@ -12,3 +12,5 @@ instance/*.DBs
 .env
 .venv/
 venv/
+
+app/api_key.py
