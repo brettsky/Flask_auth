@@ -1,8 +1,9 @@
 from flask import Flask
 import os
 import secrets
+from dotenv import load_dotenv
 
-from .extensions import db, csrf
+from .extensions import db, csrf, oauth
 
 
 def create_app(config_object: str | None = None) -> Flask:
@@ -21,11 +22,16 @@ def create_app(config_object: str | None = None) -> Flask:
     # Ensure instance folder exists for database and configs
     os.makedirs(app.instance_path, exist_ok=True)
 
+    # Load environment variables from a local .env if present (no effect in prod)
+    load_dotenv()
     # Core configuration
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or secrets.token_hex(32)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.instance_path, 'users.db')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+    # OAuth client configuration (set via environment variables)
+    app.config['GOOGLE_CLIENT_ID'] = os.environ.get('GOOGLE_CLIENT_ID')
+    app.config['GOOGLE_CLIENT_SECRET'] = os.environ.get('GOOGLE_CLIENT_SECRET')
     # Session cookie security
     app.config['SESSION_COOKIE_HTTPONLY'] = True
     app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
@@ -37,6 +43,16 @@ def create_app(config_object: str | None = None) -> Flask:
     # Init extensions
     db.init_app(app)
     csrf.init_app(app)
+    oauth.init_app(app)
+
+    # Register OAuth clients
+    oauth.register(
+        name='google',
+        client_id=app.config.get('GOOGLE_CLIENT_ID'),
+        client_secret=app.config.get('GOOGLE_CLIENT_SECRET'),
+        server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
+        client_kwargs={'scope': 'openid email profile'}
+    )
 
     # Register blueprints
     from .auth import bp as auth_bp

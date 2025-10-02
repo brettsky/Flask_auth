@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for, session
 
-from ..extensions import db
+from ..extensions import db, oauth
 from ..models import User
 from . import bp
 
@@ -77,4 +77,29 @@ def logout():
     return redirect(url_for('main.home'))
 
 
+# Login with Google
+@bp.route('/login/google')
+def google_login():
+    # Redirect user to Google's OAuth consent screen
+    redirect_url = url_for('auth.google_authorize', _external=True)
+    return oauth.google.authorize_redirect(redirect_url)
 
+
+# Authorize Google
+@bp.route('/authorize/google')
+def google_authorize():
+    token = oauth.google.authorize_access_token()
+    userinfo_endpoint = oauth.google.load_server_metadata()['userinfo_endpoint']
+    resp = oauth.google.get(userinfo_endpoint)
+    userinfo = resp.json()
+    username = userinfo['email']
+
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        user = User(username=username)
+        db.session.add(user)
+        db.session.commit()
+    session['username'] = username
+    session['oauth_token'] = token
+
+    return redirect(url_for('main.dashboard'))
