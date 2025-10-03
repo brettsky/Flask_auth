@@ -1,0 +1,45 @@
+{% extends "base.html" %}{% block body %}
+
+
+
+
+<div class="auth-wrapper">
+    <div class="auth-card text-center" id="login" >
+        <h1>Welcome to BeGone</h1>
+        <p class="subtle text-center">Sign in or create an account to continue.</p>
+        {% if error %}
+        <div class="alert text-center">{{ error }}</div>
+        {% endif %}
+        <form id="auth-form" action="{{ url_for('auth.login') }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <input type="text" name="username"  class="input-field" placeholder="Username">
+            <input type="password" name="password"  class="input-field" placeholder="Password">
+            <button type="submit" class="btn-login" onclick="setActionForm('login')">Login</button>
+            <button type="button" class="btn-register" onclick="setActionForm('register')">Register</button>
+            <a class="btn login-google" href="{{ url_for('auth.google_login') }}">Login with Google</a>
+        </form>
+    </div>
+</div>
+
+
+
+<script>
+    function setActionForm(action) {
+        let authForm = document.getElementById('auth-form');
+        if (action === 'login') {
+            authForm.action = '{{ url_for("auth.login") }}';
+            authForm.method = 'POST';
+            authForm.submit();
+        } else if (action === 'register') {
+            authForm.action = '{{ url_for("auth.register") }}';
+            authForm.method = 'POST';
+            authForm.submit();
+        }
+    }
+</script>
+
+
+
+{% endblock %}
+

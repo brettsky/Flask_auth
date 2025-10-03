@@ -33,11 +33,17 @@ def _record_attempt(ip_address: str) -> None:
     _login_attempts.setdefault(ip_address, []).append(now_ts)
 
 
+@bp.route('/login', methods=["GET"])
+def login_page():
+    # Separate login selection/display page
+    return render_template('login.html')
+
+
 @bp.route('/login', methods=["POST"])
 def login():
     client_ip = request.remote_addr or 'unknown'
     if _is_rate_limited(client_ip):
-        return render_template('index.html', error="Too many login attempts. Try again later."), 429
+        return render_template('login.html', error="Too many login attempts. Try again later."), 429
 
     username = (request.form.get('username') or '').strip()
     password = request.form.get('password') or ''
@@ -48,7 +54,7 @@ def login():
         return redirect(url_for('main.dashboard'))
     else:
         _record_attempt(client_ip)
-        return render_template('index.html', error="Invalid username or password"), 401
+        return render_template('login.html', error="Invalid username or password"), 401
 
 
 @bp.route('/register', methods=["POST"])
@@ -56,12 +62,12 @@ def register():
     username = (request.form.get('username') or '').strip()
     password = request.form.get('password') or ''
     if not username or not password:
-        return render_template('index.html', error="Username and password are required")
+        return render_template('login.html', error="Username and password are required")
     if len(password) < 8:
-        return render_template('index.html', error="Password must be at least 8 characters")
+        return render_template('login.html', error="Password must be at least 8 characters")
     existing_user = User.query.filter_by(username=username).first()
     if existing_user:
-        return render_template('index.html', error="Username already exists")
+        return render_template('login.html', error="Username already exists")
     new_user = User(username=username)
     new_user.set_password(password)
     db.session.add(new_user)
@@ -94,7 +100,7 @@ def google_authorize():
 # inside google_authorize() after fetching userinfo
     userinfo = resp.json()
     if not userinfo.get('email_verified', False):
-        return render_template('index.html', error="Google account email not verified"), 403
+        return render_template('login.html', error="Google account email not verified"), 403
 
     google_sub = userinfo.get('sub')
     email = userinfo.get('email')

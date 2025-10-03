@@ -1,47 +1,80 @@
 {% extends "base.html" %}{% block body %}
 
 
-
-
-<div class="auth-wrapper">
-    <div class="auth-card text-center" id="login" > <!-- anchor target for header button -->
-        <h1>Welcome to BeGone</h1>
-        <p class="subtle text-center">Sign in or create an account to continue.</p>
-        {% if error %}
-        <div class="alert text-center">{{ error }}</div>
-        {% endif %}
-        <!-- Action now points to auth blueprint endpoint -->
-        <form id="auth-form" action="{{ url_for('auth.login') }}" method="post">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-
-            <input type="text" name="username"  class="input-field" placeholder="Username">
-            <input type="password" name="password"  class="input-field" placeholder="Password">
-            <button type="submit" class="btn-login" onclick="setActionForm('login')">Login</button>
-            <button type="button" class="btn-register" onclick="setActionForm('register')">Register</button>
-            <a class="btn login-google" href="{{ url_for('auth.google_login') }}">Login with Google</a>
-        </form>
+<section class="hero">
+    <div class="container">
+        <h1 class="hero-title">Remove your personal data from data brokers</h1>
+        <p class="hero-subtitle">BeGone helps you discover where your information is exposed and automates compliant removal requests. Stay private. Stay in control.</p>
+        <div class="hero-actions">
+            <a href="{{ url_for('auth.login_page') }}" class="btn btn-primary">Get started</a>
+            <a href="#how-it-works" class="btn btn-secondary">How it works</a>
+        </div>
     </div>
-</div>
+    <!-- Optional: add a hero illustration or dashboard preview here -->
+    <!-- <img src="{{ url_for('static', filename='hero.png') }}" alt="BeGone preview" class="hero-illustration"> -->
+    </section>
 
 
+<section class="features">
+    <div class="container">
+        <h2 class="section-title">Why BeGone</h2>
+        <div class="feature-grid">
+            <div class="feature">
+                <h3>Discover exposure</h3>
+                <p>Identify popular data brokers and people-search sites that list your information.</p>
+            </div>
+            <div class="feature">
+                <h3>Automate requests</h3>
+                <p>Generate compliant opt-out or deletion requests and guide you through any manual steps.</p>
+            </div>
+            <div class="feature">
+                <h3>Track status</h3>
+                <p>Monitor responses and deadlines so you know when removals complete or need follow-up.</p>
+            </div>
+            <div class="feature">
+                <h3>Privacy-first</h3>
+                <p>We only collect the minimum data needed and never store third‑party credentials.</p>
+            </div>
+        </div>
+    </div>
+</section>
 
-<script>
-    function setActionForm(action) {
-        let authForm = document.getElementById('auth-form');
-        if (action === 'login') {
-            // Point to auth blueprint login endpoint
-            authForm.action = '{{ url_for("auth.login") }}';
-            authForm.method = 'POST';
-            authForm.submit();
-        } else if (action === 'register') {
-            // Point to auth blueprint register endpoint
-            authForm.action = '{{ url_for("auth.register") }}';
-            authForm.method = 'POST';
-            authForm.submit();
-        }
-    }
-</script>
 
+<section id="how-it-works" class="how-it-works">
+    <div class="container">
+        <h2 class="section-title">How it works</h2>
+        <ol class="steps">
+            <li>
+                <h4>Create your account</h4>
+                <p>Sign in to start your privacy dashboard and select your targets.</p>
+            </li>
+            <li>
+                <h4>Confirm your details</h4>
+                <p>Provide only what is required to verify removals with brokers.</p>
+            </li>
+            <li>
+                <h4>Send removals</h4>
+                <p>We generate requests and help complete any required manual steps.</p>
+            </li>
+            <li>
+                <h4>Track and verify</h4>
+                <p>See progress and verifications as brokers process your requests.</p>
+            </li>
+        </ol>
+        <div class="cta-inline">
+            <a href="{{ url_for('auth.login_page') }}" class="btn btn-primary">Start now</a>
+        </div>
+    </div>
+</section>
+
+
+<section class="cta-final">
+    <div class="container text-center">
+        <h2>Take back your privacy today</h2>
+        <p>Join and remove your data from data brokers in a compliant, trackable way.</p>
+        <a href="{{ url_for('auth.login_page') }}" class="btn btn-primary">Create your account</a>
+    </div>
+</section>
 
 
 {% endblock %}

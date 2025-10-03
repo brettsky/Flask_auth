@@ -14,7 +14,7 @@ def home():
 def dashboard():
     if "username" in session:
         return render_template('dashboard.html', username=session['username'])
-    return redirect(url_for('main.home'))
+    return redirect(url_for('auth.login_page'))
 
 
 
